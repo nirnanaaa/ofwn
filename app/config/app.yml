@@ -1,0 +1,13 @@
+cache:
+  directory: ~/app/cache/
+  enabled: true
+  
+general:
+  passphrase: abc
+  run:
+    user: xlix
+    group: ~
+    
+request:
+  session_dir: ~/app/cache/sessions
+  

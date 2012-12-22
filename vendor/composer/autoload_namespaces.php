@@ -13,7 +13,7 @@ return array(
     'Symfony\\Component\\DependencyInjection\\' => $vendorDir . '/symfony/dependency-injection/',
     'Symfony\\Component\\Console' => $vendorDir . '/symfony/console/',
     'Monolog' => $vendorDir . '/monolog/monolog/src/',
-    'Lib' => $baseDir . '/libs/',
+    'Lib\\' => $baseDir . '/libs/',
     'Doctrine\\ORM\\' => $vendorDir . '/doctrine/orm/lib/',
     'Doctrine\\DBAL' => $vendorDir . '/doctrine/dbal/lib/',
     'Doctrine\\Common' => $vendorDir . '/doctrine/common/lib/',

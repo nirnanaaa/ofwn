@@ -188,18 +188,18 @@
     },
     {
         "name": "symfony/console",
-        "version": "v2.1.5",
-        "version_normalized": "2.1.5.0",
+        "version": "v2.1.6",
+        "version_normalized": "2.1.6.0",
         "target-dir": "Symfony/Component/Console",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/Console",
-            "reference": "v2.1.5"
+            "reference": "v2.1.6"
         },
         "dist": {
             "type": "zip",
-            "url": "https://github.com/symfony/Console/archive/v2.1.5.zip",
-            "reference": "v2.1.5",
+            "url": "https://github.com/symfony/Console/archive/v2.1.6.zip",
+            "reference": "v2.1.6",
             "shasum": ""
         },
         "require": {
@@ -237,12 +237,12 @@
         "source": {
             "type": "git",
             "url": "git://github.com/doctrine/doctrine2.git",
-            "reference": "4bbfe0ce8a3616b101e0bdfb0fa1f39cc8792557"
+            "reference": "8b5e4a9a52670992b85e7223d255b98cf77a35a3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://github.com/doctrine/doctrine2/archive/4bbfe0ce8a3616b101e0bdfb0fa1f39cc8792557.zip",
-            "reference": "4bbfe0ce8a3616b101e0bdfb0fa1f39cc8792557",
+            "url": "https://github.com/doctrine/doctrine2/archive/8b5e4a9a52670992b85e7223d255b98cf77a35a3.zip",
+            "reference": "8b5e4a9a52670992b85e7223d255b98cf77a35a3",
             "shasum": ""
         },
         "require": {
@@ -254,7 +254,7 @@
         "suggest": {
             "symfony/yaml": "If you want to use YAML Metadata Mapping Driver"
         },
-        "time": "2012-12-16 12:05:57",
+        "time": "2012-12-21 11:45:07",
         "bin": [
             "bin/doctrine",
             "bin/doctrine.php"
@@ -309,12 +309,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/Seldaek/monolog",
-            "reference": "0df12342ef6c5efc748b27bb9ef92e1c95631058"
+            "reference": "52b454f89041c41c548bc242482aaf9dc6fee5d8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://github.com/Seldaek/monolog/archive/0df12342ef6c5efc748b27bb9ef92e1c95631058.zip",
-            "reference": "0df12342ef6c5efc748b27bb9ef92e1c95631058",
+            "url": "https://github.com/Seldaek/monolog/archive/52b454f89041c41c548bc242482aaf9dc6fee5d8.zip",
+            "reference": "52b454f89041c41c548bc242482aaf9dc6fee5d8",
             "shasum": ""
         },
         "require": {
@@ -328,7 +328,7 @@
             "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
             "ext-mongo": "Allow sending log messages to a MongoDB server"
         },
-        "time": "2012-12-14 11:27:44",
+        "time": "2012-12-21 09:35:52",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -362,18 +362,18 @@
     },
     {
         "name": "symfony/process",
-        "version": "v2.1.5",
-        "version_normalized": "2.1.5.0",
+        "version": "v2.1.6",
+        "version_normalized": "2.1.6.0",
         "target-dir": "Symfony/Component/Process",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/Process",
-            "reference": "v2.1.5"
+            "reference": "v2.1.6"
         },
         "dist": {
             "type": "zip",
-            "url": "https://github.com/symfony/Process/archive/v2.1.5.zip",
-            "reference": "v2.1.5",
+            "url": "https://github.com/symfony/Process/archive/v2.1.6.zip",
+            "reference": "v2.1.6",
             "shasum": ""
         },
         "require": {
@@ -641,55 +641,6 @@
         "homepage": "http://leafo.net/scssphp/"
     },
     {
-        "name": "twig/extensions",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/fabpot/Twig-extensions",
-            "reference": "d1990ffaca93302709d1306d50ae153adb169f49"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://github.com/fabpot/Twig-extensions/archive/d1990ffaca93302709d1306d50ae153adb169f49.zip",
-            "reference": "d1990ffaca93302709d1306d50ae153adb169f49",
-            "shasum": ""
-        },
-        "require": {
-            "twig/twig": "1.*"
-        },
-        "time": "2012-12-15 09:26:10",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.0.x-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Twig_Extensions_": "lib/"
-            }
-        },
-        "notification-url": "http://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            }
-        ],
-        "description": "Common additional features for Twig that do not directly belong in core",
-        "homepage": "https://github.com/fabpot/Twig-extensions",
-        "keywords": [
-            "debug",
-            "i18n",
-            "text"
-        ]
-    },
-    {
         "name": "symfony/dependency-injection",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
@@ -745,5 +696,54 @@
         ],
         "description": "Symfony DependencyInjection Component",
         "homepage": "http://symfony.com"
+    },
+    {
+        "name": "twig/extensions",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/fabpot/Twig-extensions",
+            "reference": "d1990ffaca93302709d1306d50ae153adb169f49"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/fabpot/Twig-extensions/archive/d1990ffaca93302709d1306d50ae153adb169f49.zip",
+            "reference": "d1990ffaca93302709d1306d50ae153adb169f49",
+            "shasum": ""
+        },
+        "require": {
+            "twig/twig": "1.*"
+        },
+        "time": "2012-12-15 09:26:10",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Twig_Extensions_": "lib/"
+            }
+        },
+        "notification-url": "http://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            }
+        ],
+        "description": "Common additional features for Twig that do not directly belong in core",
+        "homepage": "https://github.com/fabpot/Twig-extensions",
+        "keywords": [
+            "debug",
+            "i18n",
+            "text"
+        ]
     }
 ]

@@ -1,19 +1,39 @@
 <?php
 
+/*
+ * This file is part of the Ofwn package.
+ * (c) Florian Kasper <florian.kasper@khnetworks.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ */
 namespace core;
-$vendor_dir = dirname(__DIR__) . '..' . DIRECTORY_SEPARATOR . 'vendor';
+
+$vendor_dir = dirname(__DIR__)  . DIRECTORY_SEPARATOR . 'vendor';
+$config = dirname(__DIR__). '/app/config/app.yml';
 
 require $vendor_dir . DIRECTORY_SEPARATOR .'autoload.php';
+
 $boot = new boot();
-$boot->bootstrap()
+$boot->bootstrap($config)
     ->check()
     ->boot();
 
+/**
+ * Bootstrap class
+ *
+ * @author Florian Kasper <florian.kasper@corscience.de>
+ */
 class boot
 {
-    public function bootstrap()
+    public function bootstrap($config)
     {
-        $register = new \Lib\Kernel\RegisterKernel();
+    	
+    	//$ff = new \Lib\File\Resource($config);
+    	$config = new \Lib\Config\YamlParser(new \Lib\File\Resource($config));
+        $register = new \Lib\Kernel\RegisterKernel($config->parse());
+        
         $dependencyInjection = $register->getDI();
 
         return $this;
