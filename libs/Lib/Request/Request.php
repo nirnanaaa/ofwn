@@ -294,6 +294,14 @@ class Request
     public function getAcceptEncoding(){
     	return $this->server['HTTP_ACCEPT_ENCODING'];
     }
-	 
+
+    /**
+     * Get document root
+     * @return string
+     */	
+    public function getDocRoot(){
+    	return $this->server['DOCUMENT_ROOT'];
+    }
+    
 
 }
