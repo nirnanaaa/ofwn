@@ -13,6 +13,7 @@ namespace  Lib\Kernel;
 use Symfony\Component\DependencyInjection\ContainerBuilder,
 	Symfony\Component\Config\FileLocator,
 	Symfony\Component\DependencyInjection\Loader\YamlFileLoader,
+	Symfony\Component\EventDispatcher\Event,
 	Symfony\Component\EventDispatcher\EventDispatcher;
 
 use Assetic\Asset\AssetCollection,
@@ -21,7 +22,8 @@ use Assetic\Asset\AssetCollection,
 	Assetic\Filter\Sass\SassFilter,
 	Assetic\Filter\Yui;
 
-use Lib\Event\Dispatcher\Router;
+use Lib\Event\Dispatcher\Router as EvRouter,
+	Lib\Event\Subscriber\Router as SuRouter;
 
 class RegisterKernel
 {
@@ -35,9 +37,14 @@ class RegisterKernel
         $loader = new YamlFileLoader($sc, new FileLocator($this->config->services->directory));
         $loader->load($this->config->services->file);
         $dispatcher = new EventDispatcher();
-        $router = new Router();
+        
+        $globalSubscriber = new SuRouter();
+        $dispatcher->addSubscriber($globalSubscriber);
+        
+        $router = new EvRouter();
         $dispatcher->dispatch('kernel.event',$router);
         
+
 		//return ::fromGlobals();
     }
     

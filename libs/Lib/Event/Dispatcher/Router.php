@@ -13,7 +13,7 @@ namespace Lib\Event\Dispatcher;
 
 use Symfony\Component\EventDispatcher\Event,
  	Symfony\Component\HttpFoundation\Request,
- 	Symfony\Component\HttpFoundation\Respone;
+ 	Symfony\Component\HttpFoundation\Response;
 
 class Router extends Event{
 	

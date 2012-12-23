@@ -11,10 +11,24 @@
 
 namespace Lib\Event\Subscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface,
+ 	Symfony\Component\HttpKernel\Event\FilterResponseEvent,
+ 	Symfony\Component\EventDispatcher\Event;
+
+use Lib\Router\RouterEventReceiver;
 
 class Router implements EventSubscriberInterface{
+	static public function getSubscribedEvents()
+	{
+		return array(
+				'kernel.event' => array('onKernelResponsePre', 10)
+		);
+	}
 	
+	public function onKernelResponsePre(Event $event)
+	{
+		$router = new Lib\Router\RouterEventReceiver();
+		$router->processKernelEvent($event);
+	}
 	
 }
