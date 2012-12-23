@@ -45,6 +45,11 @@ class Router implements RoutingInterface{
 	private $config;
 	
 	/**
+	 * The current URL
+	 */
+	private $url;
+	
+	/**
 	 * Constructor.
 	 * 
 	 * @param Request $request
@@ -84,14 +89,14 @@ class Router implements RoutingInterface{
 		$found = false;
 		$result = new \stdClass();
 		foreach($parsed as $name => $route){
-			$rUrl = $utils->cutWebRoot(
+			$this->url = $utils->cutWebRoot(
 						$utils->getRequestPath(
 								$this->request->getRequestUri()
 						),
 						$this->config->web->root
 					);
-			
-			if(preg_match("#^{$route->match}$#",$rUrl)){				
+			$route->match = preg_replace("#\{\w+\}#i","\w+",$route->match);
+			if(preg_match("#^{$route->match}$#",$this->url)){	
 				if(in_array($this->request->getMethod(),(array) $route->via)){
 					$routeFoundDispatcher = new RouteFoundDispatcher($name,$route);
 					$this->dispatcher->dispatch("route.found",$routeFoundDispatcher);
@@ -133,10 +138,10 @@ class Router implements RoutingInterface{
 	 * calls specified controller
 	 * @see \Lib\Router\RoutingInterface::callController()
 	 */
-	public function callController($object){
+	public function callController($object,$match){
 		$call = explode(":",$object);
 		if(empty($call[0])){
-			throw new NotFoundException("The controller class wstring was empty");
+			throw new NotFoundException("The controller class string was empty");
 		}
 		if(empty($call[2])){
 			$call[2] = 'index';
@@ -153,9 +158,22 @@ class Router implements RoutingInterface{
 		if(!method_exists($controller, $method)){
 			throw new NotFoundException(sprintf("The method %s was not found in class %s",$method,$controller));
 		}
-		
+		$reflector = new \ReflectionMethod($controller, $method);
+		$reflector_params = $reflector->getParameters();
+		 preg_match_all("#/\\w+#", $match,$matches);
+		$matches = str_replace(implode($matches[0]),"",$this->url);
+		if(strpos($matches,"/") === 0){
+			$matches[0] = "";
+		}
+		$matches = explode("/",$matches);
+		$argumentBuilder = array();
+		foreach($reflector_params as $parameters){
+			$argumentBuilder[] = $parameters->name;
+		}
+		$arguments = array_combine($argumentBuilder, $matches);
+		//print_r($argumentBuilder);
 		$class = new $controller;
-		$class->$method("123");
+		//$class->$method($argumentBuilder);
 		
 	}
 	

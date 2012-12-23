@@ -7,12 +7,9 @@ _main:
     - POST
     - DELETE
   to: Core\Controller\IndexController:static:index
-  params:
-    - ~
-    - file
     
 _second:
-  match: /abc
+  match: /abc/sdg/{some}/{content}/{from}
   via:
     - ~
     - GET
@@ -20,5 +17,3 @@ _second:
     - POST
     - DELETE
   to: Core\Controller\IndexController::index
-  params:
-    - file

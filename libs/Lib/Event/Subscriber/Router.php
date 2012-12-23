@@ -47,7 +47,7 @@ class Router implements EventSubscriberInterface{
 		$this->router->process();
 	}
 	public function onRouteFound(Event $event){
-		$this->router->callController($event->getFullObject());
+		$this->router->callController($event->getFullObject(),$event->getMatch());
 	}
 	public function onRouteNotFound(Event $event){
 		

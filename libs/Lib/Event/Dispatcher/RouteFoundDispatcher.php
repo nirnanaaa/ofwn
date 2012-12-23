@@ -55,6 +55,10 @@ class RouteFoundDispatcher extends Event{
 		return $this->getTo(2);
 	}
 	
+	public function getMatch(){
+		return $this->route->match;
+	}
+	
 	public function getParams(){
 		return $this->route->params;
 	}
