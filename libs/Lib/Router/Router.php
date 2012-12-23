@@ -82,7 +82,14 @@ class Router implements RoutingInterface{
 		$found = false;
 		$result = new \stdClass();
 		foreach($parsed as $name => $route){
-			if($utils->cutWebRoot($utils->getRequestPath($this->request->getRequestUri()),$this->config->web->root) === $route->match){
+			$rUrl = $utils->cutWebRoot(
+						$utils->getRequestPath(
+								$this->request->getRequestUri()
+						),
+						$this->config->web->root
+					);
+			
+			if(preg_match("#^{$route->match}$#",$rUrl)){				
 				if(in_array($this->request->getMethod(),(array) $route->via)){
 					$result->name = $name;
 					$result->to = $route->to;
@@ -139,16 +146,17 @@ class Router implements RoutingInterface{
 		if(!class_exists($controller)){
 			//Exception controller not found
 		}
+		if(!is_subclass_of($controller, "Lib\\Controller\\Controller")){
+			//not a subclass
+		}
 		$method = "{$method}Action";
 		if(!method_exists($controller, $method)){
 			//Exception method not found
 		}
-		$static = false;
-		if(!empty($params)){
-			if(strpos($params,"static") !== false){
-				$static = true;
-			}
-		}
+		
+		
+		$class = new $controller;
+		$class->$method("123");
 		
 	}
 	

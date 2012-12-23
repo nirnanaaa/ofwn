@@ -16,7 +16,7 @@ use Lib\Controller\Controller;
 class IndexController extends Controller{
 	
 	public function indexAction($file){
-		
+		echo "123";
 	}
 	
 }
