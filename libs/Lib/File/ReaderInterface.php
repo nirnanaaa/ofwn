@@ -2,7 +2,6 @@
 
 namespace Lib\File;
 
-interface ReaderInterface{
-	
-	
+interface ReaderInterface
+{
 }

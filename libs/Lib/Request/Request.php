@@ -18,19 +18,19 @@ namespace Lib\Request;
  */
 class Request
 {
-	/**
-	 * @var string
-	 */
+    /**
+     * @var string
+     */
     private $webseperator = '/';
-    
+
     /**
      * @var self|boolean
      */
-	private static $instance = false;
-	
-	/**
-	 * @var array
-	 */
+    private static $instance = false;
+
+    /**
+     * @var array
+     */
     private $file;
 
     /**
@@ -61,130 +61,143 @@ class Request
     /**
      * @var array
      */
-	private $server;
+    private $server;
 
-	/**
-	 * @var array
-	 */
-	private $session;
-	
-	/**
-	 * Constructor.
-	 * 
-	 */
-	public function __construct(){
-	}
-	/**
-	 * Build Request from globals
-	 * 
-	 * @return Ambigous <\Lib\Request\self, boolean>
-	 */
-    public static function fromGlobals(){
-		if(self::$instance){
-			return self::$instance;
-		}else{
-			self::$instance = new self;
-		}
-		return self::$instance->buildRequest($_POST,$_GET,$_FILES,$_REQUEST,$_ENV,$_SERVER,$_SESSION);
-	}
-	
-	/**
-	 * Build the Request non-statically
-	 * 
-	 * @param array $post
-	 * @param array $get
-	 * @param array $file
-	 * @param array $request
-	 * @param array $env
-	 * @param array $server
-	 * @param array $session
-	 * @return \Lib\Request\Request
-	 */
-    public function buildRequest($post = null, $get = null, $file = null,$request = null, $env = null,$server = null, $session = null){
-    	if(null !== $get){
-    		$this->get = $get;
-    	}
-    	if(null !== $post){
-    		$this->post = $post;
-    	}
-    	if(null !== $file){
-    		$this->file = $file;
-    	}
-    	if(null !== $request){
-    		$this->request = $request;
-    	}
-    	if(null !== $env){
-    		$this->environment = $env;
-    	}
-    	if(null !== $server){
-    		$this->server = $server;
-    	}
-    	if(null !== $session){
-    		$this->session = $session;
-    	}
-    	return $this;
+    /**
+     * @var array
+     */
+    private $session;
+
+    /**
+     * Constructor.
+     *
+     */
+    public function __construct()
+    {
     }
-    
+    /**
+     * Build Request from globals
+     *
+     * @return Ambigous <\Lib\Request\self, boolean>
+     */
+    public static function fromGlobals()
+    {
+        if (self::$instance) {
+            return self::$instance;
+        } else {
+            self::$instance = new self;
+        }
+
+        return self::$instance->buildRequest($_POST,$_GET,$_FILES,$_REQUEST,$_ENV,$_SERVER,$_SESSION);
+    }
+
+    /**
+     * Build the Request non-statically
+     *
+     * @param  array                $post
+     * @param  array                $get
+     * @param  array                $file
+     * @param  array                $request
+     * @param  array                $env
+     * @param  array                $server
+     * @param  array                $session
+     * @return \Lib\Request\Request
+     */
+    public function buildRequest($post = null, $get = null, $file = null,$request = null, $env = null,$server = null, $session = null)
+    {
+        if (null !== $get) {
+            $this->get = $get;
+        }
+        if (null !== $post) {
+            $this->post = $post;
+        }
+        if (null !== $file) {
+            $this->file = $file;
+        }
+        if (null !== $request) {
+            $this->request = $request;
+        }
+        if (null !== $env) {
+            $this->environment = $env;
+        }
+        if (null !== $server) {
+            $this->server = $server;
+        }
+        if (null !== $session) {
+            $this->session = $session;
+        }
+
+        return $this;
+    }
+
     /**
      * Gets a Parameter from the SERVER variable
-     * 
-     * @param string $param
+     *
+     * @param  string      $param
      * @return string|NULL
      */
-    public function getServerParam($param){
-    	if(array_key_exists($parm, $this->server)){
-    		return $this->server[$param];
-    	}
-    	return null;   	
+    public function getServerParam($param)
+    {
+        if (array_key_exists($parm, $this->server)) {
+            return $this->server[$param];
+        }
+
+        return null;
     }
-    
+
     /**
      * Get a Get parameter
-     * 
-     * @param string $param
+     *
+     * @param  string      $param
      * @return string|NULL
      */
-    public function get($param){
-    	if(in_array($param,$this->get)){
-    		return $this->get[$param];
-    	}
-    	return null;
+    public function get($param)
+    {
+        if (in_array($param,$this->get)) {
+            return $this->get[$param];
+        }
+
+        return null;
     }
-    
+
     /**
      * All get parameters
-     * 
+     *
      * @return array
      */
-    public function getParams(){
-    	return $this->get;
+    public function getParams()
+    {
+        return $this->get;
     }
-    
+
     /**
      * Gets the remote IP address
-     * 
+     *
      * @return string
      */
-    public function getRemoteIp(){
-    	return $this->server['REMOTE_ADDR'];
+    public function getRemoteIp()
+    {
+        return $this->server['REMOTE_ADDR'];
     }
-    
+
     /**
-     * Gets the HTTP cache control 
-     * 
+     * Gets the HTTP cache control
+     *
      * @return string
      */
-    public function getCacheControl(){
-    	return $this->server['HTTP_CACHE_CONTROL'];
+    public function getCacheControl()
+    {
+        return $this->server['HTTP_CACHE_CONTROL'];
     }
-    
+
     /**
      * Gets all acceptable languages
-     * 
+     *
      * @return string
      */
-    public function getAcceptLanguage(){
-    	return $this->server['HTTP_ACCEPT_LANGUAGE'];
+    public function getAcceptLanguage()
+    {
+        return $this->server['HTTP_ACCEPT_LANGUAGE'];
     }
 
     /**
@@ -192,17 +205,19 @@ class Request
      *
      * @return string
      */
-    public function getServerPort(){
-    	return $this->server['SERVER_PORT'];
+    public function getServerPort()
+    {
+        return $this->server['SERVER_PORT'];
     }
-    
+
     /**
      * Gets the Server Software
      *
      * @return string
      */
-    public function getServerSoftware(){
-    	return $this->server['SERVER_SOFTWARE'];
+    public function getServerSoftware()
+    {
+        return $this->server['SERVER_SOFTWARE'];
     }
 
     /**
@@ -210,8 +225,9 @@ class Request
      *
      * @return string
      */
-    public function getUsername(){
-    	return $this->environment['USERNAME'];
+    public function getUsername()
+    {
+        return $this->environment['USERNAME'];
     }
 
     /**
@@ -219,8 +235,9 @@ class Request
      *
      * @return string
      */
-    public function getRequestTime(){
-    	return $this->server['REQUEST_TIME_FLOAT'];
+    public function getRequestTime()
+    {
+        return $this->server['REQUEST_TIME_FLOAT'];
     }
 
     /**
@@ -228,8 +245,9 @@ class Request
      *
      * @return string
      */
-    public function getRemotePort(){
-    	return $this->server['REMOTE_PORT'];
+    public function getRemotePort()
+    {
+        return $this->server['REMOTE_PORT'];
     }
 
     /**
@@ -237,8 +255,9 @@ class Request
      *
      * @return string
      */
-    public function getServerProtocol(){
-    	return $this->server['SERVER_PROTOCOL'];
+    public function getServerProtocol()
+    {
+        return $this->server['SERVER_PROTOCOL'];
     }
 
     /**
@@ -246,8 +265,9 @@ class Request
      *
      * @return string
      */
-    public function getConnection(){
-    	return $this->server['HTTP_CONNECTION'];
+    public function getConnection()
+    {
+        return $this->server['HTTP_CONNECTION'];
     }
 
     /**
@@ -255,8 +275,9 @@ class Request
      *
      * @return array
      */
-    public function getArgv(){
-    	return $this->server['argv'];
+    public function getArgv()
+    {
+        return $this->server['argv'];
     }
 
     /**
@@ -264,8 +285,9 @@ class Request
      *
      * @return integer
      */
-    public function getArgc(){
-    	return $this->server['argc'];
+    public function getArgc()
+    {
+        return $this->server['argc'];
     }
 
     /**
@@ -273,8 +295,9 @@ class Request
      *
      * @return string
      */
-    public function getHttpHost(){
-    	return $this->server['HTTP_HOST'];
+    public function getHttpHost()
+    {
+        return $this->server['HTTP_HOST'];
     }
 
     /**
@@ -282,25 +305,27 @@ class Request
      *
      * @return string
      */
-    public function getAcceptTypes(){
-    	return $this->server['HTTP_ACCEPT'];
+    public function getAcceptTypes()
+    {
+        return $this->server['HTTP_ACCEPT'];
     }
-    
+
     /**
-     * Gets acceptable encodings 
+     * Gets acceptable encodings
      * @return string
      */
-    public function getAcceptEncoding(){
-    	return $this->server['HTTP_ACCEPT_ENCODING'];
+    public function getAcceptEncoding()
+    {
+        return $this->server['HTTP_ACCEPT_ENCODING'];
     }
 
     /**
      * Get document root
      * @return string
-     */	
-    public function getDocRoot(){
-    	return $this->server['DOCUMENT_ROOT'];
+     */
+    public function getDocRoot()
+    {
+        return $this->server['DOCUMENT_ROOT'];
     }
-    
 
 }

@@ -6,19 +6,23 @@ class RequestUtils
 {
     private $webseperator ;
 
-    public function __construct($seperator = "/"){
-		$this->webseperator = $seperator;
-	}
-	public function addTrailingCharacter($url = null){
-		if(null === $url || empty($url)){
-			return $this->webseperator;
-		}
-		if (strpos($url,$this->webseperator) === strlen($url)-1 ){
-			return $url;
-		}
-		return $url . $this->webseperator;
-	}
-    public function addLeadingCharacter($url = null){
+    public function __construct($seperator = "/")
+    {
+        $this->webseperator = $seperator;
+    }
+    public function addTrailingCharacter($url = null)
+    {
+        if (null === $url || empty($url)) {
+            return $this->webseperator;
+        }
+        if (strpos($url,$this->webseperator) === strlen($url)-1 ) {
+            return $url;
+        }
+
+        return $url . $this->webseperator;
+    }
+    public function addLeadingCharacter($url = null)
+    {
         if (null === $url || empty($url)) {
             return $this->webseperator;
         }
@@ -29,20 +33,23 @@ class RequestUtils
         return $this->webseperator . $url;
 
     }
-	public function parseRequestHeaders() {
+    public function parseRequestHeaders()
+    {
     $headers = array();
-    foreach($_SERVER as $key => $value) {
+    foreach ($_SERVER as $key => $value) {
         if (substr($key, 0, 5) <> 'HTTP_') {
             continue;
         }
         $header = str_replace(' ', '-', ucwords(str_replace('_', ' ', strtolower(substr($key, 5)))));
         $headers[$header] = $value;
     }
+
     return $headers;
-	}
-	public function getMimeByEnding($ending){
-		$mime_types = array(
-			"323" => "text/h323",
+    }
+    public function getMimeByEnding($ending)
+    {
+        $mime_types = array(
+            "323" => "text/h323",
             "acx" => "application/internet-property-stream",
             "ai" => "application/postscript",
             "aif" => "audio/x-aiff",
@@ -228,11 +235,10 @@ class RequestUtils
             "xwd" => "image/x-xwindowdump",
             "z" => "application/x-compress",
             "zip" => "application/zip"
-		);
-	}
-	public function getEncodingByMime($mime){
-	
-	}
-	
+        );
+    }
+    public function getEncodingByMime($mime)
+    {
+    }
 
 }

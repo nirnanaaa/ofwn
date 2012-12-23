@@ -12,32 +12,31 @@
 namespace Lib\Event\Dispatcher;
 
 use Symfony\Component\EventDispatcher\Event,
-	Symfony\Component\HttpFoundation\Response;
+    Symfony\Component\HttpFoundation\Response;
 
-class ControllerCompleteDispatcher extends Event{
-	
-	/**
-	 * Symfony Response instance
-	 * 
-	 * @var \Symfony\Component\HttpFoundation\Response
-	 */
-	private $response;
-	
-	
-	/**
-	 * Constructor.
-	 * 
-	 * @param \Symfony\Component\HttpFoundation\Response $response The response object
-	 * 
-	 */
-	public function __construct(Response $response){
-		$this->response = $response;
-	}
-	
-	public function getResponse(){
-		return $this->response;
-	}
+class ControllerCompleteDispatcher extends Event
+{
+    /**
+     * Symfony Response instance
+     *
+     * @var \Symfony\Component\HttpFoundation\Response
+     */
+    private $response;
 
-	
-	
+    /**
+     * Constructor.
+     *
+     * @param \Symfony\Component\HttpFoundation\Response $response The response object
+     *
+     */
+    public function __construct(Response $response)
+    {
+        $this->response = $response;
+    }
+
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
 }

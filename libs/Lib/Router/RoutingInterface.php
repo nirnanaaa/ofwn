@@ -6,16 +6,17 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
  */
 
 namespace Lib\Router;
 use Symfony\Component\HttpFoundation\Response;
 
-interface RoutingInterface{
-	public function __construct($dispatcher,$request,$response,$config);
-	public function route();
-	public function reverseRoute();
-	public function callController($object,$match);
-	public function returnResponse(Response $response);
+interface RoutingInterface
+{
+    public function __construct($dispatcher,$request,$response,$config);
+    public function route();
+    public function reverseRoute();
+    public function callController($object,$match);
+    public function returnResponse(Response $response);
 }
