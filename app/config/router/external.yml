@@ -1,0 +1,10 @@
+_main:
+  match: /
+  via:
+    -GET
+    -PUT
+    -POST
+    -DELETE
+  to: Core\Controller\IndexController
+  params:
+    - file

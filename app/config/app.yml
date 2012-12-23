@@ -7,7 +7,7 @@ router:
   format: yaml
   
 web:
-  root: ~/chroot/
+  root: chroot
   
 services:
     directory: ~/app/config/services/
@@ -17,7 +17,7 @@ general:
   passphrase: abc
   run:
     user: xlix
-    group: ~
+    group: none
     
 request:
   session_dir: ~/app/cache/sessions

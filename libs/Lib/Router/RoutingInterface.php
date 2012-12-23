@@ -12,9 +12,9 @@
 namespace Lib\Router;
 
 interface RoutingInterface{
-	public function __construct($request,$response,$config);
+	public function __construct($dispatcher,$request,$response,$config);
 	public function route();
 	public function reverseRoute();
-	public function callController();
+	public function callController($controller,$method = 'index');
 	public function returnResponse();
 }
