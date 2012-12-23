@@ -2,6 +2,10 @@ cache:
   directory: ~/app/cache/
   enabled: true
   
+router:
+  global_router: ~/app/config/router/external.yml
+  format: yaml
+  
 web:
   root: ~/chroot/
   
@@ -10,7 +14,6 @@ services:
     file:     globally.yml
     
 general:
-
   passphrase: abc
   run:
     user: xlix

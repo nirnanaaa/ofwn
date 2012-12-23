@@ -17,14 +17,30 @@ use Symfony\Component\EventDispatcher\Event,
 
 class Router extends Event{
 	
+	/**
+	 * config stdclass
+	 * 
+	 * @var StdClass
+	 */
+	private $config;
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param StdClass $config The configuration
+	 * 
+	 */
+	public function __construct(\StdClass $config){
+		$this->config = $config;
+	}
 	public function getRequest(){
 		return Request::createFromGlobals();
 	}
 	public function getResponse(){
 		return new Response();
 	}
-	public function getRouter(){
-		
+	public function getConfig(){
+		return $this->config;
 	}
 	
 }

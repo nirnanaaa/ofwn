@@ -19,47 +19,54 @@ use Symfony\Component\EventDispatcher\Event,
 use Lib\Router\Exception\InstanceException;
 
 class RouterEventReceiver{
-	/**
-	 * The Event Dispatcher
-	 * @var \Symfony\Component\EventDispatcher\EventDispatcher
-	 */
-	protected $dispatcher;
 	
 	/**
-	 * The Request Oject from globals
-	 * @var \Symfony\Component\HttpFoundation\Request
+	 * 
+	 * @var \Symfony\Component\EventDispatcher\Event
 	 */
-	protected $request;
-	
-	/**
-	 * A new Response Oject
-	 * @var \Symfony\Component\HttpFoundation\Response
-	 */
-	protected $response;
-	
+	private $event;
 	
 	/**
 	 * processes the event, checks for right instances and calls the router procession
 	 * 
 	 * @param \Symfony\Component\EventDispatcher\Event $event
-	 * @throws InstanceException
 	 */
 	public function processKernelEvent(Event $event){
+		$this->event = $event;
+		$this->checkInstanceAssociations();
+		if(!$this->checkDirectoryExistance()){
+			throw new InstanceException("Routing table does not exist");
+		}
+		$event->getDispatcher()->dispatch('router.checks.passed');
+	}
+	
+	/**
+	 * checks the Instance Associations for the different functions
+	 * 
+	 * @throws\Lib\Router\Exception\InstanceException
+	 */
+	public function checkInstanceAssociations(){
 		
-		if(!$event->getDispatcher() instanceof EventDispatcher){
+		if(!$this->event->getDispatcher() instanceof EventDispatcher){
 			throw new InstanceException("Dispatcher is not an instance of \Symfony\Component\EventDispatcher\EventDispatcher");
 		}
-		$this->dispatcher = $event->getDispatcher();
-		if(!$event->getResponse() instanceof Response){
+		if(!$this->event->getResponse() instanceof Response){
 			throw new InstanceException("Response is not an instance of \Symfony\Component\HttpFoundation\Response");
 		}
-		$this->response = $event->getResponse();
-		if(!$event->getRequest() instanceof Request){
+		if(!$this->event->getRequest() instanceof Request){
 			throw new InstanceException("Request is not an instance of \Symfony\Component\HttpFoundation\Request");
 		}
-		$this->request = $event->getRequest();
+	}
+	
+	public function checkDirectoryExistance(){
+		if(!file_exists($this->event->getConfig()->router->global_router)){
+			return false;
+		}
+		if(!is_readable($this->event->getConfig()->router->global_router)){
+			return false;
+		}
 		
-		$this->dispatcher->dispatch('router.checks.passed');
+		return true;
 	}
 	
 }

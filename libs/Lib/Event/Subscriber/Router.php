@@ -21,7 +21,8 @@ class Router implements EventSubscriberInterface{
 	static public function getSubscribedEvents()
 	{
 		return array(
-				'kernel.event' => array('onKernelResponsePre', 10)
+				'kernel.event' => array('onKernelResponsePre', 10),
+				'router.checks.passed' => array('onRouterChecksPassed',0)
 		);
 	}
 	
@@ -29,6 +30,9 @@ class Router implements EventSubscriberInterface{
 	{
 		$router = new \Lib\Router\RouterEventReceiver();
 		$router->processKernelEvent($event);
+	}
+	public function onRouterChecksPassed(Event $event){
+		
 	}
 	
 }

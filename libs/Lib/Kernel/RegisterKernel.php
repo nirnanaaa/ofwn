@@ -41,7 +41,7 @@ class RegisterKernel
         $globalSubscriber = new SuRouter();
         $dispatcher->addSubscriber($globalSubscriber);
         
-        $router = new EvRouter();
+        $router = new EvRouter($this->config);
         $dispatcher->dispatch('kernel.event',$router);
         
 
