@@ -9,11 +9,11 @@ _main:
   to: Core\Controller\IndexController:static:index
     
 _second:
-  match: /abc/sdg/{some}/{content}/{from}
+  match: /abc/sdg/{as}/{to}/{my}/{some}
   via:
     - ~
     - GET
     - PUT
     - POST
     - DELETE
-  to: Core\Controller\IndexController::index
+  to: Core\Controller\IndexController::some

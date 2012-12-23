@@ -95,8 +95,9 @@ class Router implements RoutingInterface{
 						),
 						$this->config->web->root
 					);
+			
 			$route->match = preg_replace("#\{\w+\}#i","\w+",$route->match);
-			if(preg_match("#^{$route->match}$#",$this->url)){	
+			if(preg_match("#^{$route->match}|[\-\_\+\%]$#",$this->url)){	
 				if(in_array($this->request->getMethod(),(array) $route->via)){
 					$routeFoundDispatcher = new RouteFoundDispatcher($name,$route);
 					$this->dispatcher->dispatch("route.found",$routeFoundDispatcher);
@@ -158,21 +159,30 @@ class Router implements RoutingInterface{
 		if(!method_exists($controller, $method)){
 			throw new NotFoundException(sprintf("The method %s was not found in class %s",$method,$controller));
 		}
-		$reflector = new \ReflectionMethod($controller, $method);
-		$reflector_params = $reflector->getParameters();
-		 preg_match_all("#/\\w+#", $match,$matches);
-		$matches = str_replace(implode($matches[0]),"",$this->url);
-		if(strpos($matches,"/") === 0){
-			$matches[0] = "";
-		}
-		$matches = explode("/",$matches);
-		$argumentBuilder = array();
-		foreach($reflector_params as $parameters){
-			$argumentBuilder[] = $parameters->name;
-		}
-		$arguments = array_combine($argumentBuilder, $matches);
-		//print_r($argumentBuilder);
 		$class = new $controller;
+		$reflector = new \ReflectionMethod($class, $method);
+		$reflector_params = $reflector->getParameters();
+		if(count($reflector_params) >= 1){
+		 	preg_match_all("#/\\w+#", $match,$matches);
+			$matches = str_replace(implode($matches[0]),"",$this->url);
+			if(strpos($matches,"/") === 0){
+				$matches[0] = "";
+			}
+			$matches = explode("/",$matches);
+			$argumentBuilder = array();
+			foreach($reflector_params as $parameters){
+				$argumentBuilder[] = $parameters->getPosition();
+			}
+			$arguments = array_combine($argumentBuilder, $matches);
+			//print_r($arguments);
+			//print_r($argumentBuilder);
+			
+			$reflector->invokeArgs($class, $arguments);
+		}else{
+			$call = $reflector->invoke($class, NULL);
+		}
+
+		
 		//$class->$method($argumentBuilder);
 		
 	}

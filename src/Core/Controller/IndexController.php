@@ -15,8 +15,11 @@ use Lib\Controller\Controller;
 
 class IndexController extends Controller{
 	
-	public function indexAction($file,$else,$some){
+	public function indexAction(){
 		echo "123";
+	}
+	public function someAction($as,$to,$my,$some){
+		echo $as.$to.$my.$some;
 	}
 	
 }
