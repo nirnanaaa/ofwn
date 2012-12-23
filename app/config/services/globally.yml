@@ -1,0 +1,13 @@
+parameters:
+   log.class: \Monolog\Logger
+   log.name: core
+   request.class: \Lib\Request\Request
+   
+services:
+  log:
+    class: %log.class%
+    arguments: [%log.name%]
+  request:
+    class: %request.class%
+    calls:
+      - [fromGlobals]

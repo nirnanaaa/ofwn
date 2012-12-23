@@ -11,14 +11,11 @@
 namespace core;
 
 $vendor_dir = dirname(__DIR__)  . DIRECTORY_SEPARATOR . 'vendor';
-$config = dirname(__DIR__). '/app/config/app.yml';
+
 
 require $vendor_dir . DIRECTORY_SEPARATOR .'autoload.php';
 
-$boot = new boot();
-$boot->bootstrap($config)
-    ->check()
-    ->boot();
+
 
 /**
  * Bootstrap class
@@ -27,12 +24,14 @@ $boot->bootstrap($config)
  */
 class boot
 {
+	public $config;
+	
     public function bootstrap($config)
     {
     	
-    	//$ff = new \Lib\File\Resource($config);
     	$config = new \Lib\Config\YamlParser(new \Lib\File\Resource($config));
-        $register = new \Lib\Kernel\RegisterKernel($config->parse());
+    	$this->config = $config->parse();
+        $register = new \Lib\Kernel\RegisterKernel($this->config);
         
         $dependencyInjection = $register->getDI();
 
@@ -40,6 +39,18 @@ class boot
     }
     public function check()
     {
+    	
+    	$checks = new \checks\directorys();
+    	$dir = $this->config->cache->directory;
+    	if(!$checks->cacheExists($dir)){
+    		
+    	}
+    	if(!$checks->cacheEmpty($dir)){
+    		
+    	}
+    	if(!$checks->cacheWritable($dir)){
+    		
+    	}
         return $this;
     }
     public function boot()
@@ -69,14 +80,39 @@ class health
 }
 class directorys
 {
-    public static function cacheExists()
+	/**
+	 * 
+	 * @param string $cache
+	 * @return boolean
+	 */
+    public static function cacheExists($cache)
     {
+    	if(is_dir($cache)){
+    		return true;
+    	}
+    	return false;
     }
-    public static function cacheEmpty()
+    public static function cacheEmpty($path)
     {
+    	$empty = true;
+    	$dir = opendir($path);
+    	while($file = readdir($dir))
+    	{
+    		if($file != '.' && $file != '..')
+    		{
+    			$empty = false;
+    			break;
+    		}
+    	}
+    	closedir($dir);
+    	return $empty;
     }
-    public static function cacheWritable()
+    public static function cacheWritable($dir)
     {
+    	if(is_writable($dir)){
+    		return true;
+    	}
+    	return false;
     }
     public static function cacheIncomplete()
     {

@@ -2,7 +2,15 @@ cache:
   directory: ~/app/cache/
   enabled: true
   
+web:
+  root: ~/chroot/
+  
+services:
+    directory: ~/app/config/services/
+    file:     globally.yml
+    
 general:
+
   passphrase: abc
   run:
     user: xlix

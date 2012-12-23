@@ -26,30 +26,6 @@
   </FilesMatch>
 </IfModule>
 
-
-# ----------------------------------------------------------------------
-# Cross-domain AJAX requests
-# ----------------------------------------------------------------------
-
-# Serve cross-domain Ajax requests, disabled by default.
-# enable-cors.org
-# code.google.com/p/html5security/wiki/CrossOriginRequestSecurity
-
-#  <IfModule mod_headers.c>
-#    Header set Access-Control-Allow-Origin "*"
-#  </IfModule>
-
-
-# ----------------------------------------------------------------------
-# CORS-enabled images (@crossorigin)
-# ----------------------------------------------------------------------
-
-# Send CORS headers if browsers request them; enabled by default for images.
-# developer.mozilla.org/en/CORS_Enabled_Image
-# blog.chromium.org/2011/07/using-cross-domain-images-in-webgl-and.html
-# hacks.mozilla.org/2011/11/using-cors-to-load-webgl-textures-from-cross-domain-images/
-# wiki.mozilla.org/Security/Reviews/crossoriginAttribute
-
 <IfModule mod_setenvif.c>
   <IfModule mod_headers.c>
     # mod_headers, y u no match by Content-Type?!
@@ -60,29 +36,12 @@
   </IfModule>
 </IfModule>
 
-
-# ----------------------------------------------------------------------
-# Webfont access
-# ----------------------------------------------------------------------
-
-# Allow access from all domains for webfonts.
-# Alternatively you could only whitelist your
-# subdomains like "subdomain.example.com".
-
 <IfModule mod_headers.c>
   <FilesMatch "\.(eot|font.css|otf|ttc|ttf|woff)$">
     Header set Access-Control-Allow-Origin "*"
   </FilesMatch>
 </IfModule>
 
-
-# ----------------------------------------------------------------------
-# Proper MIME type for all files
-# ----------------------------------------------------------------------
-
-# JavaScript
-#   Normalize to standard type (it's sniffed in IE anyways)
-#   tools.ietf.org/html/rfc4329#section-7.2
 AddType application/javascript         js jsonp
 AddType application/json               json
 
@@ -96,9 +55,6 @@ AddType video/ogg                      ogv
 AddType video/webm                     webm
 AddType video/x-flv                    flv
 
-# SVG
-#   Required for svg webfonts on iPad
-#   twitter.com/FontSquirrel/status/14855840545
 AddType     image/svg+xml              svg svgz
 AddEncoding gzip                       svgz
 
@@ -291,15 +247,6 @@ FileETag None
 # BrowserMatch "Opera" !brokenvary
 # SetEnvIf brokenvary 1 force-no-vary
 
-
-# ----------------------------------------------------------------------
-# Set Keep-Alive Header
-# ----------------------------------------------------------------------
-
-# Keep-Alive allows the server to send multiple requests through one
-# TCP-connection. Be aware of possible disadvantages of this setting. Turn on
-# if you serve a lot of static content.
-
 # <IfModule mod_headers.c>
 #   Header set Connection Keep-Alive
 # </IfModule>
@@ -445,18 +392,6 @@ AddDefaultCharset utf-8
 AddCharset utf-8 .atom .css .js .json .rss .vtt .xml
 
 
-# ----------------------------------------------------------------------
-# A little more security
-# ----------------------------------------------------------------------
-
-# To avoid displaying the exact version number of Apache being used, add the
-# following to httpd.conf (it will not work in .htaccess):
-# ServerTokens Prod
-
-# "-Indexes" will have Apache block users from browsing folders without a
-# default document Usually you should leave this activated, because you
-# shouldn't allow everybody to surf through every folder on your server (which
-# includes rather private places like CMS system folders).
 <IfModule mod_autoindex.c>
   Options -Indexes
 </IfModule>

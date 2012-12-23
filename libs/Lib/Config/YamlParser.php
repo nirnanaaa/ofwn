@@ -59,7 +59,7 @@ class YamlParser implements ParserInterface{
 	 * @return string
 	 */
 	public function read(){
-		return $this->file->readFile();
+		return $this->preParse($this->file->readFile());
 	}
 	
 	/**
@@ -69,7 +69,7 @@ class YamlParser implements ParserInterface{
 	 * @return string
 	 */
 	public function parse(){
-		return $this->arrayToObject($this->parser->parse($this->file->readFile()));
+		return $this->arrayToObject($this->parser->parse($this->preParse($this->file->readFile())));
 		
 	}
 	
@@ -99,6 +99,23 @@ class YamlParser implements ParserInterface{
 	}
 	public function isValid(){
 		
+	}
+	
+	/**
+	 * preParses the files content
+	 * 
+	 * return string
+	 */
+	public function preParse($config){
+		$from = array(
+				"~",
+				"/"
+				);
+		$to = array(
+				dirname(__DIR__)."/../..",
+				constant('DIRECTORY_SEPARATOR')
+				);
+		return str_replace($from,$to,$config);
 	}
 	
 }

@@ -73,7 +73,6 @@ class Request
 	 * 
 	 */
 	public function __construct(){
-		
 	}
 	/**
 	 * Build Request from globals
