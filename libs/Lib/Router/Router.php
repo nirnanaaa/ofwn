@@ -14,7 +14,9 @@ namespace Lib\Router;
 use Lib\Request\RequestSecurity,
 	Lib\Router\RouterUtils,
 	Lib\Router\RouteParser,
-	Lib\File\Resource as FileResource;
+	Lib\File\Resource as FileResource,
+	Lib\Router\Exception\NotFoundException,
+	Lib\Event\Dispatcher\RouteFoundDispatcher;
 	
 class Router implements RoutingInterface{
 	
@@ -61,6 +63,7 @@ class Router implements RoutingInterface{
 	 * @param StdClass $config
 	 */
 	public function processVariables($dispatcher,$request,$response,$config){
+		$this->dispatcher = $dispatcher;
 		$this->request = $request;
 		$this->response = $response;
 		$this->config = $config;
@@ -78,7 +81,6 @@ class Router implements RoutingInterface{
 		$parser = new RouteParser(new FileResource($this->config->router->global_router));
 		$parsed = $parser->parse();
 		echo "<pre>";
-		print_r($parsed);
 		$found = false;
 		$result = new \stdClass();
 		foreach($parsed as $name => $route){
@@ -91,18 +93,16 @@ class Router implements RoutingInterface{
 			
 			if(preg_match("#^{$route->match}$#",$rUrl)){				
 				if(in_array($this->request->getMethod(),(array) $route->via)){
-					$result->name = $name;
-					$result->to = $route->to;
+					$routeFoundDispatcher = new RouteFoundDispatcher($name,$route);
+					$this->dispatcher->dispatch("route.found",$routeFoundDispatcher);
 					$found = true;
 					break;
 				}
 			}
 		}
 		if($found === false){
-			echo "no route found!";//EXCE
-			exit(1);
+			$this->dispatcher->dispatch("route.notfound");
 		}
-		return $result;
 	}
 	
 	/**
@@ -122,11 +122,10 @@ class Router implements RoutingInterface{
 		$utils = new RouterUtils("/");
 		if((strpos($utils->cutWebRoot($utils->getRequestPath($this->request->getRequestUri()),$this->config->web->root),
 				".".$this->config->general->phpext) === false) && $this->request->get('format') !== $this->config->general->phpext){
-			$route = $this->route();
+			 $this->route();
 		}else{
-			$route = $this->reverseRoute();
+			 $this->reverseRoute();
 		}
-		$this->callController($route);
 		
 	}
 	
@@ -135,25 +134,25 @@ class Router implements RoutingInterface{
 	 * @see \Lib\Router\RoutingInterface::callController()
 	 */
 	public function callController($object){
-		$call = explode(":",$object->to);
+		$call = explode(":",$object);
 		if(empty($call[0])){
-			//EXCEPTION Controller not set
+			throw new NotFoundException("The controller class wstring was empty");
 		}
 		if(empty($call[2])){
 			$call[2] = 'index';
 		}
 		list($controller,$params,$method) = $call;
 		if(!class_exists($controller)){
-			//Exception controller not found
+			throw new NotFoundException("The controller class was not found on the system");
 		}
-		if(!is_subclass_of($controller, "Lib\\Controller\\Controller")){
-			//not a subclass
+		$parent = "Lib\\Controller\\Controller";
+		if(!is_subclass_of($controller, $parent)){
+			throw new NotFoundException(sprintf("The controller %s is not a subclass of %s",$controller,$parent));
 		}
 		$method = "{$method}Action";
 		if(!method_exists($controller, $method)){
-			//Exception method not found
+			throw new NotFoundException(sprintf("The method %s was not found in class %s",$method,$controller));
 		}
-		
 		
 		$class = new $controller;
 		$class->$method("123");

@@ -18,6 +18,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface,
 use Lib\Router\RouterEventReceiver;
 
 class Router implements EventSubscriberInterface{
+	
+	protected $router;
+	
 	static public function getSubscribedEvents()
 	{
 		return array(
@@ -25,6 +28,8 @@ class Router implements EventSubscriberInterface{
 						array('onKernelResponsePre', 10),
 						array('onRouterChecksPassed', 5)
 						),
+				'route.found' => array('onRouteFound',0),
+				'route.notfound' => array('onRouteNotFound',0)
 				//'router.checks.passed' => array('onRouterChecksPassed',0)
 		);
 	}
@@ -35,11 +40,17 @@ class Router implements EventSubscriberInterface{
 		$router->processKernelEvent($event);
 	}
 	public function onRouterChecksPassed(Event $event){
-		$router = new \Lib\Router\Router($event->getDispatcher(),
+		$this->router = new \Lib\Router\Router($event->getDispatcher(),
 				$event->getRequest(),
 				$event->getResponse(),
 				$event->getConfig());
-		$router->process();
+		$this->router->process();
+	}
+	public function onRouteFound(Event $event){
+		$this->router->callController($event->getFullObject());
+	}
+	public function onRouteNotFound(Event $event){
+		
 	}
 	
 }
