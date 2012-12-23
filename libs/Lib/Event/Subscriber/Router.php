@@ -27,7 +27,7 @@ class Router implements EventSubscriberInterface{
 	
 	public function onKernelResponsePre(Event $event)
 	{
-		$router = new Lib\Router\RouterEventReceiver();
+		$router = new \Lib\Router\RouterEventReceiver();
 		$router->processKernelEvent($event);
 	}
 	
