@@ -45,6 +45,7 @@ class RouterEventReceiver{
 	 * @throws InstanceException
 	 */
 	public function processKernelEvent(Event $event){
+		
 		if(!$event->getDispatcher() instanceof EventDispatcher){
 			throw new InstanceException("Dispatcher is not an instance of \Symfony\Component\EventDispatcher\EventDispatcher");
 		}
@@ -58,6 +59,7 @@ class RouterEventReceiver{
 		}
 		$this->request = $event->getRequest();
 		
+		$this->dispatcher->dispatch('router.checks.passed');
 	}
 	
 }
