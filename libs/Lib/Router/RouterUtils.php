@@ -44,4 +44,8 @@ class RouterUtils extends RequestUtils{
 		return null;
 	}
 	
+	public function cutWebRoot($url,$root){
+		return str_replace($root,"",$url);
+	}
+	
 }

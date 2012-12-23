@@ -15,6 +15,6 @@ interface RoutingInterface{
 	public function __construct($dispatcher,$request,$response,$config);
 	public function route();
 	public function reverseRoute();
-	public function callController($controller,$method = 'index');
+	public function callController($object);
 	public function returnResponse();
 }

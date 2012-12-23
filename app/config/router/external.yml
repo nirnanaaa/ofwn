@@ -1,10 +1,24 @@
 _main:
   match: /
   via:
-    -GET
-    -PUT
-    -POST
-    -DELETE
-  to: Core\Controller\IndexController
+    - ~
+    - GET
+    - PUT
+    - POST
+    - DELETE
+  to: Core\Controller\IndexController:static:index
+  params:
+    - ~
+    - file
+    
+_second:
+  match: /abc
+  via:
+    - ~
+    - GET
+    - PUT
+    - POST
+    - DELETE
+  to: Core\Controller\IndexController::index
   params:
     - file

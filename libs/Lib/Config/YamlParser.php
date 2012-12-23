@@ -109,7 +109,7 @@ class YamlParser implements ParserInterface{
 	public function preParse($config){
 		$from = array(
 				"~",
-				"/"
+				"\/",
 				);
 		$to = array(
 				dirname(__DIR__)."/../..",

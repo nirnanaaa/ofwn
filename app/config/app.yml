@@ -1,24 +1,25 @@
 cache:
-  directory: ~/app/cache/
+  directory: ~\/app\/cache\/
   enabled: true
   
 router:
-  global_router: ~/app/config/router/external.yml
+  global_router: ~\/app\/config\/router\/external.yml
   format: yaml
   
 web:
-  root: chroot
+  root: /chroot
   
 services:
-    directory: ~/app/config/services/
+    directory: ~\/app\/config\/services\/
     file:     globally.yml
     
 general:
+  phpext: php
   passphrase: abc
   run:
     user: xlix
     group: none
     
 request:
-  session_dir: ~/app/cache/sessions
+  session_dir: ~\/app\/cache\/sessions
   

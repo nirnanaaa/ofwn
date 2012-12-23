@@ -9,14 +9,8 @@
  * 
  */
 
-namespace Core\Controller;
+namespace Lib\Controller;
 
-use Lib\Controller\Controller;
-
-class IndexController extends Controller{
-	
-	public function indexAction($file){
-		
-	}
+class Controller{
 	
 }
