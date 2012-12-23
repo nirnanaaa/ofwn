@@ -18,10 +18,15 @@ use Symfony\Component\EventDispatcher\Event,
 
 use Lib\Router\Exception\InstanceException;
 
+/**
+ * Router Event Receiver class
+ *
+ * @author Florian Kasper <florian.kasper@corscience.de>
+ */
 class RouterEventReceiver{
 	
 	/**
-	 * 
+	 * The event object
 	 * @var \Symfony\Component\EventDispatcher\Event
 	 */
 	private $event;
@@ -35,7 +40,7 @@ class RouterEventReceiver{
 		$this->event = $event;
 		$this->checkInstanceAssociations();
 		if(!$this->checkDirectoryExistance()){
-			throw new InstanceException("Routing table does not exist");
+			throw new InstanceException("Routing table does not exist/not readable");
 		}
 		$event->getDispatcher()->dispatch('router.checks.passed');
 	}
@@ -58,6 +63,10 @@ class RouterEventReceiver{
 		}
 	}
 	
+	/**
+	 * checks if the filesystem structure is correct
+	 * @return boolean
+	 */
 	public function checkDirectoryExistance(){
 		if(!file_exists($this->event->getConfig()->router->global_router)){
 			return false;
