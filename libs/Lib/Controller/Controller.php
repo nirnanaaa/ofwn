@@ -12,7 +12,15 @@
 namespace Lib\Controller;
 
 use Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpFoundation\Request;
+    Symfony\Component\HttpFoundation\Request,
+    Lib\File\Resource,
+    Lib\Cache\Cache,
+    MtHaml\Autoloader,
+	MtHaml\Environment,
+	MtHaml\Support\Twig\Extension,
+	MtHaml\Support\Twig\Loader,
+	\Twig_Loader_Filesystem,
+	\Twig_Environment;
 
 class Controller
 {
@@ -31,15 +39,23 @@ class Controller
     private $request;
 
     /**
+     * Config
+     */
+    private $config;
+    
+    /**
      * Constructor.
      *
      * @param \Symfony\Component\HttpFoundation\Response $response
      * @param \Symfony\Component\HttpFoundation\Request  $request
-      */
-    public function __construct(Response $response, Request $request)
+     * @param \StdClass $config
+     * 
+     */
+    public function __construct(Response $response, Request $request,\StdClass $config)
     {
         $this->response = $response;
         $this->request = $request;
+        $this->config = $config;
     }
 
     /**
@@ -65,7 +81,7 @@ class Controller
     /**
      * renders raw text as text/plain mime
      *
-     * @param  string                                     $text
+     * @param  string $text
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function renderText($text)
@@ -78,8 +94,22 @@ class Controller
         return $this->response;
     }
 
-    public function render()
+    public function render($file,$vars = array())
     {
+    	//echo $this->config->templating->tpl_dir.$file;
+    	
+    	$haml = new Environment('twig', array('enable_escaper' => false));
+    	$fs = new Twig_Loader_Filesystem(array($this->config->templating->tpl_dir));
+    	$twig = new Twig_Environment($fs, array(
+    			'cache' => $this->config->cache->directory.'/twig/',
+    	));
+    	$twig->addExtension(new Extension());
+    	//$fileLoader = new Resource($this->config->templating->tpl_dir.$file);
+    	
+    	$haml = $haml->compileString(file_get_contents($this->config->templating->tpl_dir.$file), $file);
+    	
+		$this->response->setContent($twig->render($haml,$vars));
+		return $this->response;
     }
 
     public function renderView()

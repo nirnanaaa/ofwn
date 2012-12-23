@@ -9,6 +9,7 @@ return array(
     'Twig_Extensions_' => $vendorDir . '/twig/extensions/lib/',
     'Twig_' => $vendorDir . '/twig/twig/lib/',
     'Symfony\\Component\\Yaml\\' => $vendorDir . '/symfony/yaml/',
+    'Symfony\\Component\\Templating\\' => $vendorDir . '/symfony/templating/',
     'Symfony\\Component\\Process' => $vendorDir . '/symfony/process/',
     'Symfony\\Component\\HttpKernel\\' => $vendorDir . '/symfony/http-kernel/',
     'Symfony\\Component\\HttpFoundation\\' => $vendorDir . '/symfony/http-foundation/',

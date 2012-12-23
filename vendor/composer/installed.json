@@ -1068,5 +1068,54 @@
         ],
         "description": "Symfony HttpKernel Component",
         "homepage": "http://symfony.com"
+    },
+    {
+        "name": "symfony/templating",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "target-dir": "Symfony/Component/Templating",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/Templating",
+            "reference": "c6d98922882b859b2c99f4adea768364dd4d3dc9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://github.com/symfony/Templating/archive/c6d98922882b859b2c99f4adea768364dd4d3dc9.zip",
+            "reference": "c6d98922882b859b2c99f4adea768364dd4d3dc9",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2012-12-19 07:09:49",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Symfony\\Component\\Templating\\": ""
+            }
+        },
+        "notification-url": "http://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "http://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Templating Component",
+        "homepage": "http://symfony.com"
     }
 ]

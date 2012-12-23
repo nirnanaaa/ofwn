@@ -91,7 +91,6 @@ class Router implements RoutingInterface
         $utils = new RouterUtils("/");
         $parser = new RouteParser(new FileResource($this->config->router->global_router));
         $parsed = $parser->parse();
-        echo "<pre>";
         $found = false;
         $result = new \stdClass();
         foreach ($parsed as $name => $route) {
@@ -172,7 +171,7 @@ class Router implements RoutingInterface
         if (!method_exists($controller, $method)) {
             throw new NotFoundException(sprintf("The method %s was not found in class %s",$method,$controller));
         }
-        $class = new $controller($this->response,$this->request);
+        $class = new $controller($this->response,$this->request,$this->config);
         $reflector = new \ReflectionMethod($class, $method);
         $reflector_params = $reflector->getParameters();
         ob_start();

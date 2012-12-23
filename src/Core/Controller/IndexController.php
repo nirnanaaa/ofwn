@@ -13,10 +13,14 @@ namespace Core\Controller;
 
 use Lib\Controller\Controller;
 
+
 class IndexController extends Controller{
 	
 	public function indexAction(){
-		return $this->renderText("123");
+		return $this->render("Main/Lib.haml",array(
+				"title" => "main"
+				));
+		//return $this->renderText("123");
 	}
 	public function someAction($as,$to,$my,$some){
 		return $this->renderText("123");

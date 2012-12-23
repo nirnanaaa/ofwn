@@ -9,6 +9,10 @@ router:
 web:
   root: /chroot
   
+templating:
+  engine: haml
+  tpl_dir: ~\/src\/Core\/Views\/
+    
 services:
     directory: ~\/app\/config\/services\/
     file:     globally.yml

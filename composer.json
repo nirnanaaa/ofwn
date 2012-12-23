@@ -24,7 +24,8 @@
 	"symfony/config":"dev-master",
 	"symfony/event-dispatcher":"dev-master",
 	"symfony/http-kernel":"dev-master",
-	"symfony/http-foundation":"dev-master"
+	"symfony/http-foundation":"dev-master",
+	"symfony/templating":"dev-master"
 	
     },
     "require-dev": {
