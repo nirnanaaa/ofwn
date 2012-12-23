@@ -11,12 +11,15 @@
 
 namespace Lib\Router;
 
+use Symfony\Component\HttpFoundation\Response;
+
 use Lib\Request\RequestSecurity,
 	Lib\Router\RouterUtils,
 	Lib\Router\RouteParser,
 	Lib\File\Resource as FileResource,
 	Lib\Router\Exception\NotFoundException,
-	Lib\Event\Dispatcher\RouteFoundDispatcher;
+	Lib\Event\Dispatcher\RouteFoundDispatcher,
+	Lib\Event\Dispatcher\ControllerCompleteDispatcher;
 	
 class Router implements RoutingInterface{
 	
@@ -96,8 +99,9 @@ class Router implements RoutingInterface{
 						$this->config->web->root
 					);
 			
-			$route->match = preg_replace("#\{\w+\}#i","\w+",$route->match);
-			if(preg_match("#^{$route->match}|[\-\_\+\%]$#",$this->url)){	
+			$route->match = preg_replace("#\{\w+\}#i","(\w+|\_\-\+\%)",$route->match);
+			
+			if(preg_match("#^{$route->match}$#",$this->url)){
 				if(in_array($this->request->getMethod(),(array) $route->via)){
 					$routeFoundDispatcher = new RouteFoundDispatcher($name,$route);
 					$this->dispatcher->dispatch("route.found",$routeFoundDispatcher);
@@ -136,7 +140,10 @@ class Router implements RoutingInterface{
 	}
 	
 	/**
-	 * calls specified controller
+	 * calls specified controller, using a Reflector method call
+	 * 
+	 * @param string $object
+	 * @param string $match
 	 * @see \Lib\Router\RoutingInterface::callController()
 	 */
 	public function callController($object,$match){
@@ -159,9 +166,10 @@ class Router implements RoutingInterface{
 		if(!method_exists($controller, $method)){
 			throw new NotFoundException(sprintf("The method %s was not found in class %s",$method,$controller));
 		}
-		$class = new $controller;
+		$class = new $controller($this->response,$this->request);
 		$reflector = new \ReflectionMethod($class, $method);
 		$reflector_params = $reflector->getParameters();
+		ob_start();
 		if(count($reflector_params) >= 1){
 		 	preg_match_all("#/\\w+#", $match,$matches);
 			$matches = str_replace(implode($matches[0]),"",$this->url);
@@ -174,20 +182,22 @@ class Router implements RoutingInterface{
 				$argumentBuilder[] = $parameters->getPosition();
 			}
 			$arguments = array_combine($argumentBuilder, $matches);
-			//print_r($arguments);
-			//print_r($argumentBuilder);
-			
-			$reflector->invokeArgs($class, $arguments);
+			$call = $reflector->invokeArgs($class, $arguments);
 		}else{
+			
 			$call = $reflector->invoke($class, NULL);
 		}
 
-		
-		//$class->$method($argumentBuilder);
-		
+		ob_end_clean();
+		if(null === $call){
+			throw new NotFoundException(sprintf("The method %s must return a valid response!",$method));
+			//exception no return call;
+		}
+		$cntrl = new ControllerCompleteDispatcher($call);
+		$this->dispatcher->dispatch('controller.parsed',$cntrl);
 	}
 	
-	public function returnResponse(){
-		
+	public function returnResponse(Response $response){
+		$response->send();
 	}
 }

@@ -16,10 +16,10 @@ use Lib\Controller\Controller;
 class IndexController extends Controller{
 	
 	public function indexAction(){
-		echo "123";
+		return $this->renderText("123");
 	}
 	public function someAction($as,$to,$my,$some){
-		echo $as.$to.$my.$some;
+		return $this->renderText("123");
 	}
 	
 }
