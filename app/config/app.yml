@@ -1,6 +1,7 @@
 cache:
   directory: ~\/app\/cache\/
   enabled: true
+  expire: 3600
   
 router:
   global_router: ~\/app\/config\/router\/external.yml
@@ -14,11 +15,21 @@ templating:
   tpl_dir: ~\/src\/Core\/Views\/
     
 services:
-    directory: ~\/app\/config\/services\/
-    file:     globally.yml
-    
+  directory: ~\/app\/config\/services\/
+  file:     globally.yml
+monolog:
+  level: warn
+  name: application
+  file: %kernel.root%/logs/app.log
 general:
   phpext: php
+  errorhandling:
+    directory: ~\/app\/boot\/Resources\/
+    status:
+      all: null
+      404: 404.html.twig
+      500: 500.html.twig
+      
   passphrase: abc
   run:
     user: xlix

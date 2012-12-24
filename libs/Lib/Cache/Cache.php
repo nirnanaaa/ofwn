@@ -31,12 +31,13 @@ class Cache{
 	 * @param string $facility
 	 */
 	public function __construct($facility,$config){
-		$directory = $this->getCachePath().$facility;
-		if(!is_dir($directory)){
-			mkdir($directory,0700,true);
-		}
 		$this->facility = $facility;
 		$this->config = $config;
+		$directory = $this->getCachePath().$facility;
+		if(!is_dir($directory)){
+			mkdir($directory,0755,true);
+		}
+
 	}
 	
 	/**
@@ -56,7 +57,14 @@ class Cache{
 	 * @return boolean
 	 */
 	public function writeCache($id,$content){
-		//if(){}
+		$location = $this->getCacheLocation($id);
+		$file = new Resource($location);
+		if(is_string($content)){
+			$file->writeFile($content);
+		}else{
+			$file->writeFile(serialize($content));
+		}
+		
 	}
 	
 	/**
@@ -76,7 +84,17 @@ class Cache{
 	 * @return mixed
 	 */
 	public function readCache($id){
-		
+		$location = $this->getCacheLocation($id);
+		if(filemtime($location)+$this->config->cache->expire < time()){
+			return false;
+		}
+		$file = new Resource($location);
+		$filecontent = $file->readFile();
+		if(is_string($filecontent)){
+			return $filecontent;
+		}else{
+			return unserialize($file->readFile());
+		}
 	}
 	
 	
@@ -86,7 +104,7 @@ class Cache{
 	 * @param string $id
 	 */
 	public function generateId($id){
-		
+		return sha1($id);
 	}
 	/**
 	 * gets the caches location
@@ -96,8 +114,15 @@ class Cache{
 	 * 
 	 */
 	public function getCacheLocation($id){
-		
+		return $this->getCachePath().$this->facility.'/'.$this->generateId($id).'.'.$this->config->general->phpext;
 	}
-	
+	/**
+	 * gets the relative cache path
+	 * @param string $id
+	 * @return string
+	 */
+	public function getCacheLocationRelative($id){
+		return $this->facility.'/'.$this->generateId($id).'.'.$this->config->general->phpext;
+	}
 	
 }

@@ -175,6 +175,7 @@ class Router implements RoutingInterface
         $reflector = new \ReflectionMethod($class, $method);
         $reflector_params = $reflector->getParameters();
         ob_start();
+        
         if (count($reflector_params) >= 1) {
              preg_match_all("#/\\w+#", $match,$matches);
             $matches = str_replace(implode($matches[0]),"",$this->url);
@@ -188,12 +189,13 @@ class Router implements RoutingInterface
             }
             $arguments = array_combine($argumentBuilder, $matches);
             $call = $reflector->invokeArgs($class, $arguments);
+            ob_end_clean();
         } else {
 
             $call = $reflector->invoke($class, NULL);
         }
 
-        ob_end_clean();
+        //print_r($call);
         if (null === $call) {
             throw new NotFoundException(sprintf("The method %s must return a valid response!",$method));
             //exception no return call;

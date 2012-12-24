@@ -99,16 +99,24 @@ class Controller
     	//echo $this->config->templating->tpl_dir.$file;
     	
     	$haml = new Environment('twig', array('enable_escaper' => false));
-    	$fs = new Twig_Loader_Filesystem(array($this->config->templating->tpl_dir));
+    	
+    	$fs = new Twig_Loader_Filesystem(array($this->config->cache->directory));
+    	
     	$twig = new Twig_Environment($fs, array(
     			'cache' => $this->config->cache->directory.'/twig/',
     	));
+    	
     	$twig->addExtension(new Extension());
+    	
     	//$fileLoader = new Resource($this->config->templating->tpl_dir.$file);
-    	
-    	$haml = $haml->compileString(file_get_contents($this->config->templating->tpl_dir.$file), $file);
-    	
-		$this->response->setContent($twig->render($haml,$vars));
+    	$filex = new Resource($this->config->templating->tpl_dir.$file);
+    	$cache = new Cache('templating',$this->config);
+    	if(false === $cache->readCache($file)){
+    		$haml = $haml->compileString($filex->readFile(), $file); 
+    		$cache->writeCache($file, $haml);
+    	}
+
+		$this->response->setContent($twig->render($cache->getCacheLocationRelative($file),$vars));
 		return $this->response;
     }
 

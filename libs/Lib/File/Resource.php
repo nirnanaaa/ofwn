@@ -33,8 +33,12 @@ class Resource implements ReaderInterface
      */
     public function __construct($file)
     {
-        if (!file_exists($file) || null === $file) {
-            throw new FileNotFoundException("File does not exists");
+        if (!file_exists($file)) {
+        	fclose(fopen($file, 'a'));
+            
+        }
+        if(null === $file){
+        	throw new FileNotFoundException("File does not exists");
         }
         $this->file = $file;
     }
@@ -66,9 +70,9 @@ class Resource implements ReaderInterface
         if (is_null($content)||empty($content)) {
             throw new ErrorException("Content Empty");
         }
-        if (!is_writable($this->file)) {
-            throw new ErrorException("File is not writable");
-        }
+       // if (!is_writable($this->file)) {
+       //     throw new ErrorException("File is not writable");
+       // }
         if ($add) {
             file_put_contents($this->file,$content,FILE_APPEND);
         } else {

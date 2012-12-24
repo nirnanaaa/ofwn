@@ -12,7 +12,6 @@ namespace core;
 
 $vendor_dir = dirname(__DIR__)  . DIRECTORY_SEPARATOR . 'vendor';
 
-
 require $vendor_dir . DIRECTORY_SEPARATOR .'autoload.php';
 
 
@@ -31,7 +30,7 @@ class boot
     	
     	$config = new \Lib\Config\YamlParser(new \Lib\File\Resource($config));
     	$this->config = $config->parse();
-        $register = new \Lib\Kernel\RegisterKernel($this->config);
+        $register = new \Lib\Kernel\RegisterKernel($this->config,__DIR__);
         
         $dependencyInjection = $register->getDI();
 

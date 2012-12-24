@@ -1,12 +1,18 @@
 parameters:
+   logwriter.class: \Monolog\Handler\StreamHandler
+   logwriter.log: %kernel.root%/logs/app.log
    log.class: \Monolog\Logger
-   log.name: core
    request.class: \Lib\Request\Request
    
 services:
+  logwriter:
+    class: %logwriter.class%
+    arguments: [%logwriter.log%,\Monolog\Logger::Warning]
   log:
     class: %log.class%
-    arguments: [%log.name%]
+    arguments: [%monolog.name%]
+    calls:
+      - [pushHandler, [@logwriter]]
   request:
     class: %request.class%
     calls:
