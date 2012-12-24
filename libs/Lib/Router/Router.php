@@ -53,15 +53,20 @@ class Router implements RoutingInterface
     private $url;
 
     /**
+     * Injector
+     */
+    private $injector;
+    
+    /**
      * Constructor.
      *
      * @param Request  $request
      * @param Response $response
      * @param StdClass $config
      */
-    public function __construct($dispatcher,$request,$response,$config)
+    public function __construct($dispatcher,$request,$response,$config,$dependencyInjector)
     {
-        $this->processVariables($dispatcher,$request,$response,$config);
+        $this->processVariables($dispatcher,$request,$response,$config,$dependencyInjector);
     }
 
     /**
@@ -71,12 +76,13 @@ class Router implements RoutingInterface
      * @param Response $response
      * @param StdClass $config
      */
-    public function processVariables($dispatcher,$request,$response,$config)
+    public function processVariables($dispatcher,$request,$response,$config,$dependencyInjector)
     {
         $this->dispatcher = $dispatcher;
         $this->request = $request;
         $this->response = $response;
         $this->config = $config;
+        $this->injector = $dependencyInjector;
     }
 
     /**
@@ -101,7 +107,7 @@ class Router implements RoutingInterface
                         $this->config->web->root
                     );
 
-            $route->match = preg_replace("#\{\w+\}#i","(\w+|\_\-\+\%)",$route->match);
+            $route->match = preg_replace("#\{\w+\}#i","(\w+|\_|\_+|\-|\-+|\+|\++|\%|\%+)",$route->match);
 
             if (preg_match("#^{$route->match}$#",$this->url)) {
                 if (in_array($this->request->getMethod(),(array) $route->via)) {
@@ -143,66 +149,7 @@ class Router implements RoutingInterface
 
     }
 
-    /**
-     * calls specified controller, using a Reflector method call
-     *
-     * @param string $object
-     * @param string $match
-     * @see \Lib\Router\RoutingInterface::callController()
-     */
-    public function callController($object,$match)
-    {
-        $call = explode(":",$object);
-        if (empty($call[0])) {
-            throw new NotFoundException("The controller class string was empty");
-        }
-        if (empty($call[2])) {
-            $call[2] = 'index';
-        }
-        list($controller,$params,$method) = $call;
-        if (!class_exists($controller)) {
-            throw new NotFoundException("The controller class was not found on the system");
-        }
-        $parent = "Lib\\Controller\\Controller";
-        if (!is_subclass_of($controller, $parent)) {
-            throw new NotFoundException(sprintf("The controller %s is not a subclass of %s",$controller,$parent));
-        }
-        $method = "{$method}Action";
-        if (!method_exists($controller, $method)) {
-            throw new NotFoundException(sprintf("The method %s was not found in class %s",$method,$controller));
-        }
-        $class = new $controller($this->response,$this->request,$this->config);
-        $reflector = new \ReflectionMethod($class, $method);
-        $reflector_params = $reflector->getParameters();
-        ob_start();
-        
-        if (count($reflector_params) >= 1) {
-             preg_match_all("#/\\w+#", $match,$matches);
-            $matches = str_replace(implode($matches[0]),"",$this->url);
-            if (strpos($matches,"/") === 0) {
-                $matches[0] = "";
-            }
-            $matches = explode("/",$matches);
-            $argumentBuilder = array();
-            foreach ($reflector_params as $parameters) {
-                $argumentBuilder[] = $parameters->getPosition();
-            }
-            $arguments = array_combine($argumentBuilder, $matches);
-            $call = $reflector->invokeArgs($class, $arguments);
-            ob_end_clean();
-        } else {
-
-            $call = $reflector->invoke($class, NULL);
-        }
-
-        //print_r($call);
-        if (null === $call) {
-            throw new NotFoundException(sprintf("The method %s must return a valid response!",$method));
-            //exception no return call;
-        }
-        $cntrl = new ControllerCompleteDispatcher($call);
-        $this->dispatcher->dispatch('controller.parsed',$cntrl);
-    }
+    
 
     public function returnResponse(Response $response)
     {

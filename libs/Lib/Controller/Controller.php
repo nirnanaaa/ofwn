@@ -11,14 +11,12 @@
 
 namespace Lib\Controller;
 
+
 use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\DependencyInjection\ContainerBuilder,
     Lib\File\Resource,
     Lib\Cache\Cache,
-    MtHaml\Autoloader,
-	MtHaml\Environment,
-	MtHaml\Support\Twig\Extension,
-	MtHaml\Support\Twig\Loader,
 	\Twig_Loader_Filesystem,
 	\Twig_Environment;
 
@@ -44,6 +42,11 @@ class Controller
     private $config;
     
     /**
+     * Container Builder
+     */
+    private $injector;
+    
+    /**
      * Constructor.
      *
      * @param \Symfony\Component\HttpFoundation\Response $response
@@ -51,11 +54,11 @@ class Controller
      * @param \StdClass $config
      * 
      */
-    public function __construct(Response $response, Request $request,\StdClass $config)
+    public function __construct(Response $response, Request $request,ContainerBuilder $dep)
     {
+    	$this->injector = $dep;
         $this->response = $response;
         $this->request = $request;
-        $this->config = $config;
     }
 
     /**
@@ -96,27 +99,9 @@ class Controller
 
     public function render($file,$vars = array())
     {
-    	//echo $this->config->templating->tpl_dir.$file;
-    	
-    	$haml = new Environment('twig', array('enable_escaper' => false));
-    	
-    	$fs = new Twig_Loader_Filesystem(array($this->config->cache->directory));
-    	
-    	$twig = new Twig_Environment($fs, array(
-    			'cache' => $this->config->cache->directory.'/twig/',
-    	));
-    	
-    	$twig->addExtension(new Extension());
-    	
-    	//$fileLoader = new Resource($this->config->templating->tpl_dir.$file);
-    	$filex = new Resource($this->config->templating->tpl_dir.$file);
-    	$cache = new Cache('templating',$this->config);
-    	if(false === $cache->readCache($file)){
-    		$haml = $haml->compileString($filex->readFile(), $file); 
-    		$cache->writeCache($file, $haml);
-    	}
-
-		$this->response->setContent($twig->render($cache->getCacheLocationRelative($file),$vars));
+		$twig = $this->injector->get('twignormal');
+		//$this->response->setContent($twig->render($cache->getCacheLocationRelative($file),$vars));
+		$this->response->setContent($twig->render($file,$vars));
 		return $this->response;
     }
 

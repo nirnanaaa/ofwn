@@ -14,9 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 interface RoutingInterface
 {
-    public function __construct($dispatcher,$request,$response,$config);
+    public function __construct($dispatcher,$request,$response,$config,$dependencyInjector);
     public function route();
     public function reverseRoute();
-    public function callController($object,$match);
     public function returnResponse(Response $response);
 }

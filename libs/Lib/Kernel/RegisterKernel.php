@@ -33,6 +33,7 @@ class RegisterKernel
     public function getDI()
     {
     	$sc = new ContainerBuilder();
+    	
     	$par = new RegisterParameters($sc);
     	$par->registerConfigParameters($this->config);
     	$sc->setParameter('kernel.root', $this->root);
@@ -40,7 +41,7 @@ class RegisterKernel
     	$loader->load($this->config->services->file);
     	$dispatcher = new EventDispatcher();
     	
-    	$globalSubscriber = new SuRouter();
+    	$globalSubscriber = new SuRouter($sc);
     	$dispatcher->addSubscriber($globalSubscriber);
     	
     	$errorHandler = new ErrorHandling($dispatcher, $this->config, $sc);
@@ -48,7 +49,7 @@ class RegisterKernel
         	$router = new EvRouter($this->config);
         	$dispatcher->dispatch('kernel.event',$router);
         }catch(\Exception $e){
-        	trigger_error($e->getMessage(),E_CORE_ERROR);
+        	print_r($e->getMessage());
         }
         
         //return ::fromGlobals();

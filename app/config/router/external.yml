@@ -9,7 +9,7 @@ _main:
   to: Core\Controller\IndexController:static:index
     
 _second:
-  match: /test/{number}
+  match: /test/{number}/{image}/location
   via:
     - ~
     - GET

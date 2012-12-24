@@ -11,6 +11,8 @@
 
 namespace Lib\Cache;
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
 use Lib\File\Resource;
 
 class Cache{
@@ -21,18 +23,18 @@ class Cache{
 	private $facility;
 	
 	/**
-	 * @var \StdClass
+	 * @var ContainerBuilder
 	 */
-	private $config;
+	private $injector;
 	
 	/**
 	 * Constructor.
 	 * 
 	 * @param string $facility
 	 */
-	public function __construct($facility,$config){
+	public function __construct($facility,$dependencyInjector){
 		$this->facility = $facility;
-		$this->config = $config;
+		$this->injector = $dependencyInjector;
 		$directory = $this->getCachePath().$facility;
 		if(!is_dir($directory)){
 			mkdir($directory,0755,true);
@@ -46,7 +48,7 @@ class Cache{
 	 * @return string
 	 */
 	public function getCachePath(){
-		return $this->config->cache->directory;
+		return $this->injector->getParameter('cache.directory');
 	}
 	
 	/**
@@ -85,7 +87,7 @@ class Cache{
 	 */
 	public function readCache($id){
 		$location = $this->getCacheLocation($id);
-		if(filemtime($location)+$this->config->cache->expire < time()){
+		if(filemtime($location)+$this->injector->getParameter('cache.expire') < time()){
 			return false;
 		}
 		$file = new Resource($location);
@@ -114,7 +116,7 @@ class Cache{
 	 * 
 	 */
 	public function getCacheLocation($id){
-		return $this->getCachePath().$this->facility.'/'.$this->generateId($id).'.'.$this->config->general->phpext;
+		return $this->getCachePath().$this->facility.'/'.$this->generateId($id).'.'.$this->injector->getParameter('general.phpext');
 	}
 	/**
 	 * gets the relative cache path
@@ -122,7 +124,7 @@ class Cache{
 	 * @return string
 	 */
 	public function getCacheLocationRelative($id){
-		return $this->facility.'/'.$this->generateId($id).'.'.$this->config->general->phpext;
+		return $this->facility.'/'.$this->generateId($id).'.'.$this->injector->getParameter('general.phpext');
 	}
 	
 }

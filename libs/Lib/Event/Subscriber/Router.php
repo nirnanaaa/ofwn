@@ -11,6 +11,8 @@
 
 namespace Lib\Event\Subscriber;
 
+use Lib\Router\ClassParser;
+
 use Symfony\Component\EventDispatcher\EventSubscriberInterface,
      Symfony\Component\HttpKernel\Event\FilterResponseEvent,
      Symfony\Component\EventDispatcher\Event;
@@ -22,6 +24,11 @@ class Router implements EventSubscriberInterface
 {
     protected $router;
 
+    protected $dependencyInjection;
+    
+    public function __construct($dep){
+    	$this->dependencyInjection = $dep;
+    }
     public static function getSubscribedEvents()
     {
         return array(
@@ -47,13 +54,15 @@ class Router implements EventSubscriberInterface
         $this->router = new \Lib\Router\Router($event->getDispatcher(),
                 $event->getRequest(),
                 $event->getResponse(),
-                $event->getConfig());
+                $event->getConfig(),
+        		$this->dependencyInjection);
         $this->router->process();
     }
 
     public function onRouteFound(Event $event)
     {
-        $this->router->callController($event->getFullObject(),$event->getMatch());
+    	$classparser = new ClassParser($event->getFullObject(), $event->getMatch(), $this->dependencyInjection);
+    	$classparser->process();
     }
 
     public function onRouteNotFound(Event $event)

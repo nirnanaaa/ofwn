@@ -2,7 +2,10 @@ parameters:
    logwriter.class: \Monolog\Handler\StreamHandler
    logwriter.log: %kernel.root%/logs/app.log
    log.class: \Monolog\Logger
-   request.class: \Lib\Request\Request
+   request.class: \Symfony\Component\HttpFoundation\Request
+   response.class: \Symfony\Component\HttpFoundation\Response
+   twig.filesystem.class: \Twig_Loader_Filesystem
+   twig.environment: \Twig_Environment
    
 services:
   logwriter:
@@ -13,7 +16,28 @@ services:
     arguments: [%monolog.name%]
     calls:
       - [pushHandler, [@logwriter]]
+      
+  response:
+    class: %response.class%
+  reqfaq:
+    class: %request.class%
   request:
     class: %request.class%
-    calls:
-      - [fromGlobals]
+    factory_service: reqfaq
+    factory_method: createFromGlobals
+    
+  twigfserror:
+    class: %twig.filesystem.class%
+    arguments: [%errorhandling.directory%] 
+  twigerror:
+    class: %twig.environment%
+    arguments: [@twigfserror, {cache : %cache.error_dir%}]
+  twigfsnormal:
+    class: %twig.filesystem.class%
+    arguments: [%cache.templ_dir%]
+  twignormal:
+    class: %twig.environment%
+    arguments: [@twigfsnormal, {cache : %cache.templ_dir%}]
+    
+
+

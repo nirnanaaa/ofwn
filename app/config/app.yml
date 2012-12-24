@@ -1,4 +1,6 @@
 cache:
+  error_dir: %kernel.root%/cache/twig/error/
+  templ_dir: %kernel.root%/cache/twig/
   directory: ~\/app\/cache\/
   enabled: true
   expire: 3600
@@ -12,7 +14,7 @@ web:
   
 templating:
   engine: haml
-  tpl_dir: ~\/src\/Core\/Views\/
+  tpl_dir: %kernel.root%/../src/Core/Views/%controller%
     
 services:
   directory: ~\/app\/config\/services\/
