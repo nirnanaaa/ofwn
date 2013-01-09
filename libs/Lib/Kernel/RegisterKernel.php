@@ -21,15 +21,35 @@ use Lib\Event\Dispatcher\Router as EvRouter,
 
 class RegisterKernel
 {
+    /**
+     * @var \StdClass 
+     */
     public $config;
     
+    /**
+     * @var string 
+     */
     public $root;
     
+    /**
+     * Constructor. 
+     * 
+     * @param string $configuration
+     * @param string $root
+     * 
+     */
     public function __construct($configuration,$root)
     {
         $this->config = $configuration;
         $this->root = $root;
     }
+    
+    /**
+     * gets the Dependency Injection component.
+     *  
+     * @return string | Symfony\Component\EventDispatcher\EventDispatcher
+     * 
+     */
     public function getDI()
     {
     	$sc = new ContainerBuilder();
@@ -38,6 +58,7 @@ class RegisterKernel
     	$par->registerConfigParameters($this->config);
     	$sc->setParameter('kernel.root', $this->root);
     	$loader = new YamlFileLoader($sc, new FileLocator($this->config->services->directory));
+        
     	$loader->load($this->config->services->file);
     	$dispatcher = new EventDispatcher();
     	
@@ -47,9 +68,11 @@ class RegisterKernel
     	$errorHandler = new ErrorHandling($dispatcher, $this->config, $sc);
     	try{
         	$router = new EvRouter($this->config);
-        	$dispatcher->dispatch('kernel.event',$router);
+            
+        	return $dispatcher->dispatch('kernel.event',$router);
         }catch(\Exception $e){
-        	print_r($e->getMessage());
+            
+        	return $e->getMessage();
         }
         
         //return ::fromGlobals();
